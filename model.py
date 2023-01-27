@@ -15,7 +15,7 @@ def get_class_db() -> dict:
 
 def set_class_db(clss: dict) -> dict:
     global class_db
-    class_db.copy(clss)
+    class_db = dict.copy(clss)
 
 
 def get_class_name() -> str:

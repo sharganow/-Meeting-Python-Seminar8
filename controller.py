@@ -14,6 +14,7 @@ def main_menu() -> None:
                 case 'Выберите класс':
                     ml.set_school_db(ml.get_classes())
                     choose_class(ml.get_school_db())
+                    dcct = ml.get_class_db()
                     break
                 case _:
                     action = 'Выберите класс'
@@ -33,6 +34,7 @@ def choose_class(school: list) ->None:
                     break
                 case _:
                     ml.set_class_name(class_name)
+                    ml.set_class_db(ml.open_class_db(ml.get_class_name()))
                     break
         except:
             exit(-1)
