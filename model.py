@@ -34,7 +34,7 @@ def get_class_db() -> dict:
     return class_db
 
 
-def set_class_db(clss: dict) -> dict:
+def set_class_db(clss: dict) -> None:
     global class_db
     class_db = dict.copy(clss)
 
@@ -106,8 +106,12 @@ def get_pupil_journal(jrnl: str) -> dict:
             index_end_name = sbjct.index(':')
             subject = sbjct[:index_end_name]
             if sbjct[index_end_name + 1] == '[' and sbjct[-1] == ']':
-                grades = [i for i in sbjct[index_end_name + 2:-1].split(',')]
-                jrnl_dict[subject] = grades
+                sub_sbjct = sbjct[index_end_name + 2:-1]
+                if len(sub_sbjct):
+                    grades = [i for i in sbjct[index_end_name + 2:-1].split(',')]
+                    jrnl_dict[subject] = grades
+                else:
+                    jrnl_dict[subject] = list()
     return jrnl_dict
 
 
@@ -122,7 +126,7 @@ def get_subjects_list(class_dbp: dict) -> list:
         pupil_subjects = [subj for subj in class_dbp[pupil].keys()]
         for j, subject in enumerate(subjects):
             if subject not in pupil_subjects:
-                class_dbp[pupil][subject] = ['']
+                class_dbp[pupil][subject] = []
     set_class_db(class_dbp)
     return subjects
 
@@ -139,12 +143,19 @@ def get_pupil_list(class_dbp: dict, subject: str) -> list:
         max_len += len_tab
     for i, pupil in enumerate(pupils):
         need_to_add = (max_len - len(pupil)) // len_tab
-        pupil_str = pupil + tab * need_to_add + '   [ '
+        pupil_str = pupil + tab * need_to_add + '   ['
         for j, grade in enumerate(class_dbp[pupil][subject]):
             pupil_str += grade + ' '
+        if pupil_str[-1] == ' ':
+            pupil_str = pupil_str[:-1]
         pupil_str += ']'
         pupil_list.append(pupil_str)
     return pupil_list
+
+
+def set_rate_answer_pupil(class_dbp: dict, subject: str, pupil_ans: str, rate: str) -> None:
+    class_dbp[pupil_ans][subject].append(rate)
+    set_class_db(class_dbp)
 
 
 def unite_lists(one: list, two: list) -> list:
