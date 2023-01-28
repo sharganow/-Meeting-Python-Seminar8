@@ -21,6 +21,7 @@ def main_menu() -> None:
                 case 'Оценить подготовленность ученика':
                     action = rate_pupil(ml.get_class_db(), ml.get_subject_name(), ml.get_active_pupil())
                 case 'Oкончить урок':
+                    ml.close_class_db(ml.get_class_name(), ml.get_class_db())
                     break
                 case _:
                     action = 'Выберите класс'

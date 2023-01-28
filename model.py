@@ -62,7 +62,6 @@ def set_school_db(school: list) -> None:
 def get_classes() -> list:
     school = list()
     school = os.listdir()
-    # print(school)
     school_copy = school[:]
     for i in range(len(school_copy) - 1, -1, -1):
         if school_copy[i].lower().endswith(endClassFile):
@@ -77,7 +76,6 @@ def get_classes() -> list:
                     school[i] = school[i].upper()[:-len(endClassFile)]
                     continue
         not_a_class = school.pop(i)
-        # print(not_a_class)
     return school
 
 
@@ -108,11 +106,41 @@ def get_pupil_journal(jrnl: str) -> dict:
             if sbjct[index_end_name + 1] == '[' and sbjct[-1] == ']':
                 sub_sbjct = sbjct[index_end_name + 2:-1]
                 if len(sub_sbjct):
-                    grades = [i for i in sbjct[index_end_name + 2:-1].split(',')]
+                    grades = [i for i in sub_sbjct.split()]
                     jrnl_dict[subject] = grades
                 else:
                     jrnl_dict[subject] = list()
     return jrnl_dict
+
+
+def close_class_db(class_name_: str, class_cls) -> None:
+    class_f = ''
+    subject_list = get_subjects_list(class_cls)
+    pupil_list = list(class_cls.keys())
+    for i, pupil in enumerate(pupil_list):
+        pupil_record = '{' + pupil + ':{'
+        for j, subject in enumerate(subject_list):
+            subject_record = subject + ':['
+            rates_list = class_cls[pupil][subject]
+            if len(rates_list):
+                for k, rate in enumerate(rates_list):
+                    subject_record += rate + ' '
+                subject_record = subject_record[:-1]
+            subject_record += '],'
+            pupil_record += subject_record
+        pupil_record = pupil_record[:-1]
+        pupil_record += '}}\n'
+        class_f += pupil_record
+    class_f = class_f[:-1]
+    try:
+        with open(class_name_ + endClassFile, 'w', encoding='UTF-8') as file:
+            file.write(class_f)
+    except:
+        pass
+
+
+
+
 
 
 def get_subjects_list(class_dbp: dict) -> list:
